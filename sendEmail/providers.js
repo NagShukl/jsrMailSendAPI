@@ -91,14 +91,14 @@ class mailGunProvider_fail {
         console.log('SendMail of provider TWO is called with '+mailData);
         var qs = require("querystring");
         var http = require("https");
-        var authenticationHeader = "Basic " + new Buffer("api:dc2ecf46faa0c71c202994d93c1612cc-afab6073-5b41e7ee").toString("base64");
+        var authenticationHeader ='JSR_API_KEY'
         var options = {
             "method": "POST",
             "hostname": "api.mailgun.net",
             "port": null,
             "path": "/v3/sandbox4f97468e1cd94d71a6e4b0ed0f83daac.mailgun.org/messages",
             "headers": {
-                //"authorization": authenticationHeader,//"Basic YXBpOmRjMmVjZjQ2ZmFhMGM3MWMyMDI5OTRkOTNjMTYxMmNjLWFmYWI2MDczLTViNDFlN2Vl",
+                "authorization": authenticationHeader,//"Basic YXBpOmRjMmVjZjQ2ZmFhMGM3MWMyMDI5OTRkOTNjMTYxMmNjLWFmYWI2MDczLTViNDFlN2Vl",
                 "content-type": "application/x-www-form-urlencoded",
                 "cache-control": "no-cache"
             }
@@ -138,7 +138,7 @@ class mailGunProvider {
         console.log('SendMail of provider TWO is called with '+mailData);
         var qs = require("querystring");
         var http = require("https");
-        var authenticationHeader = "Basic " + new Buffer("api:dc2ecf46faa0c71c202994d93c1612cc-afab6073-5b41e7ee").toString("base64");
+        var authenticationHeader ='JSR_API_KEY'
         var options = {
             "method": "POST",
             "hostname": "api.mailgun.net",
