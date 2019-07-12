@@ -1,0 +1,22 @@
+{
+  "name": "emailmanager",
+  "version": "1.0.0",
+  "description": "This is a microservice to allow users to send emails.",
+  "main": "server.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NagShukl"
+  },
+  "keywords": [
+    "ES6",
+    "NodeJS",
+    "MicroService",
+    "email"
+  ],
+  "author": "Nagendra Shukla",
+  "license": "MIT",
+  "dependencies": {}
+}
