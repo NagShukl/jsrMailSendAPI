@@ -41,12 +41,44 @@ class SendEmail {
         const selectedProvider = providers[providerNumber].providerObject;
         const selectedProviderName = providers[providerNumber].name;
         utils.log(`performMailSendAction: Trying to send Mail with provider#${providerNumber} of ${providers.length}, name=${selectedProviderName}`);
-        // mailData = {
-        //     from: 'nagendra.shukla@gmail.com',
-        //     to: 'nagendra.shukla@gmail.com',
-        //     subject: '111122233',
-        //     text: '123213131312312312313'
-        // };
+        mailData = {
+            from: {
+                    ame:'nagendra',
+                    email: 'nagendra.shukla@gmail.com'
+                },
+            to: [
+                {
+                    name:'nagendra',
+                    email: 'nagendra.shukla@gmail.com'
+                },
+                {
+                    name:'nagshukl',
+                    email: 'nagshukl@gmail.com'
+                }
+            ],
+            cc: [
+                {
+                    name:'nagendra',
+                    email: 'nagendra.shukla1@gmail.com'
+                },
+                {
+                    name:'nagshukl',
+                    email: 'nagshukl1@gmail.com'
+                }
+            ],
+            bcc: [
+                {
+                    name:'nagendra',
+                    email: 'nagendra.shukla2@gmail.com'
+                },
+                {
+                    name:'nagshukl',
+                    email: 'nagshukl2@gmail.com'
+                }
+            ],
+            subject: '111122233',
+            text: '123213131312312312313'
+        };
         selectedProvider.sendMail(mailData).then(data => {
             // Means one of provider, sent mail successfully.
             utils.log(`performMailSendAction: mail sent sucessfully using provider# ${providerNumber}, ${selectedProviderName}`);

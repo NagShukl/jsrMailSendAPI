@@ -4,74 +4,81 @@ class SendGridProvider {
         this.init();
     }
     init() {
-        this.config = require('../../config/MailGunConfig');
-        this.path = `/v3/${this.config.domain}/messages`
+        this.config = require('../../config/SendGridConfig');
     }
     sendMail(mailData) {
-        utils.log('SendGrid service is trying to send mail.');
-        /**
-        * //== 202 response but no mail
-        * https://stackoverflow.com/questions/42214048/sendgrid-returns-202-but-doesnt-send-email
-        * 
-        * apikey = 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
-        *  SENDGRID_API_KEY='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'"
-        * =====
-        * api key for curl
-        * apikey = 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
-        *  SENDGRID_API_KEY='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'
-        * 
-        * curl --request POST \
- --url https://api.sendgrid.com/v3/mail/send \
- --header "Authorization: Bearer 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" \
- --header 'Content-Type: application/json' \
- --data '{"personalizations": [{"to": [{"email": "nagendra.shukla@gmail.com"}]}],"from": {"email": "nagendra.shukla@gmail.com"},"subject": "Sending with SendGrid is Fun","content": [{"type": "text/plain", "value": "and easy to do anywhere, even with cURL"}]}'
-        * 
-        */
-        var http = require("https");
+        utils.log('sendMail: SendGrid service is trying to send mail.');
+        console.log('mailData = ',mailData);
+        const http = require("https");
 
-        var options = {
+        const returnPromise = new Promise((resolve, reject) => {
+            const req = http.request(this.getOptions(), function (res) {
+
+                if (res.statusCode === 200 || res.statusCode === 202) {
+                    resolve('success');
+                } else
+                    reject('failure');
+                const chunks = [];
+                res.on("data", function (chunk) {
+                    chunks.push(chunk);
+                });
+
+                res.on("end", function () {
+                    utils.log(`sendMail: SendGrid response code: ${res.statusCode} message: ${Buffer.concat(chunks)}`);
+                });
+            });
+            req.write(this.getRequestBoday(mailData));
+            //     JSON.stringify({
+            //     personalizations:
+            //         [{
+            //             to: [{ email: 'nagendra.shukla@gmail.com', name: 'Nagendra Shukla' }],
+            //             dynamic_template_data: { verb: '', adjective: '', noun: '', currentDayofWeek: '' },
+            //             subject: 'Hello, World! Jai Shri Ram!'
+            //         }],
+            //     from: { email: 'nagendra.shukla@gmail.com', name: 'Nagendra Shukla' },
+            //     reply_to: { email: 'nagendra.shukla@gmail.com', name: 'Nagendra Shukla' },
+            //     template_id: 'd-8096b5dacb254c8b882816f22d1d11fe'
+            // })
+            // );
+            req.end();
+        });
+        return returnPromise;
+    }
+    getRequestBoday(mailData) {
+        const res = {};
+        // {"personalizations": [{"to": [{"email": "example@example.com"}]}],"from": {"email": "example@example.com"},"subject": "Hello, World!","content": [{"type": "text/plain", "value": "Heya!"}]}
+        res.personalizations = [
+            {
+                to: mailData.to,
+                cc: mailData.cc,
+                bcc: mailData.bcc
+            }
+        ];
+        res.from = mailData.from;
+        res.subject = mailData.subject;
+        res.content = [
+            {
+                type: 'text/plain',
+                value: mailData.text
+            }
+        ];
+        res.reply_to = { email: 'nagendra.shukla@gmail.com', name: 'Nagendra Shukla' };
+        res.template_id ='d-8096b5dacb254c8b882816f22d1d11fe';
+        console.log('====> ',JSON.stringify(res));
+        return JSON.stringify(res);
+    }
+    getOptions() {
+        return {
             "method": "POST",
-            "hostname": "api.sendgrid.com",
+            "hostname": this.config.hostname,
             "port": null,
             "path": "/v3/mail/send",
             "headers": {
                 "content-type": "application/json",
-                "authorization": "Bearer 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",
+                "authorization": `Bearer ${this.config.key}`,
                 "cache-control": "no-cache"
             }
         };
-        var returnPromise = new Promise((resolve, reject) => {
-        var req = http.request(options, function (res) {
-            var chunks = [];
-            console.log('STATUS: ' + res.statusCode);
-            if (res.statusCode === 200 || res.statusCode === 202) {
-                resolve('success');
-            } else
-                reject('failure');
-            res.on("data", function (chunk) {
-                chunks.push(chunk);
-            });
-
-            res.on("end", function () {
-                var body = Buffer.concat(chunks);
-                console.log(body.toString());
-            });
-        });
-        console.log('Sending send Grid ,......');
-        req.write(JSON.stringify({
-            personalizations:
-                [{
-                    to: [{ email: 'nagendra.shukla@gmail.com', name: 'Nagendra Shukla' }],
-                    dynamic_template_data: { verb: '', adjective: '', noun: '', currentDayofWeek: '' },
-                    subject: 'Hello, World! Jai Shri Ram!'
-                }],
-            from: { email: 'nagendra.shukla@gmail.com', name: 'Nagendra Shukla' },
-            reply_to: { email: 'nagendra.shukla@gmail.com', name: 'Nagendra Shukla' },
-            template_id: 'd-8096b5dacb254c8b882816f22d1d11fe'
-        }));
-        req.end();
-    });
-        return returnPromise;
     }
 }
 

@@ -9,12 +9,12 @@ class MailGunProvider {
     }
     sendMail(mailData) {
         utils.log('sendMail: MailGun service is trying to send mail.');
+        console.log('mailData = ',mailData);
         const qs = require("querystring");
         const http = require("https");
         
         const returnPromise = new Promise((resolve, reject) => {
             const req = http.request(this.getOptions(), function (res) {
-                utils.log(`sendMail: MailGun response code: ${res.statusCode}`);
                 if (res.statusCode === 200) {
                     resolve('success');
                 } else
@@ -24,15 +24,42 @@ class MailGunProvider {
                     chunks.push(chunk);
                 });
                 res.on("end", function () {
-                    utils.log(`sendMail: MailGun response code: ${Buffer.concat(chunks)}`);
+                    utils.log(`sendMail: MailGun response code: ${res.statusCode} message: ${Buffer.concat(chunks)}`);
                 });
             });
-            
-            req.write(qs.stringify(mailData));
+            req.write(qs.stringify(this.getRequestBoday(mailData)));
             req.end();
         });
 
         return returnPromise;
+    }
+    getRequestBoday(mailData) {
+        const res = {};
+        if(mailData.from) {
+            res.from = mailData.from.name+' <'+mailData.from.email+'>';
+        }
+        if(mailData.to) {
+            res.to = mailData.to.map(ele => {
+                return ele.name+' <'+ele.email+'>';
+            }).join();
+        }
+        if(mailData.cc) {
+            res.cc = mailData.cc.map(ele => {
+                return ele.name+' <'+ele.email+'>';
+            }).join();
+        }
+        if(mailData.bcc) {
+            res.bcc = mailData.bcc.map(ele => {
+                return ele.name+' <'+ele.email+'>';
+            }).join();
+        }
+        if(mailData.subject) {
+            res.subject = mailData.subject;
+        }
+        if(mailData.text) {
+            res.text = mailData.text;
+        }
+        return res;
     }
     getOptions() {
         const authenticationHeader = "Basic " + new Buffer(this.config.user+':'+this.config.key).toString("base64");
