@@ -8,3 +8,6 @@ If submitted from postman, must show error as
 {"errCode":"001","errMessage":"Should have valid email in from field.,nagshukl.gmail.com is an Invalid email 
 in \"to\" field!,nagendra.shukla1gmail.com is an Invalid email in cc list.,nagshukl2gmail.com is an Invalid 
 email in bcc list.,nagendra.shukla@gmail.com Ids are duplicate in to, cc or bcc list."}
+
+-- MailGun SMTP new password
+bfceec6d0bd5eec6025799fafc996f60-afab6073-f7836164
