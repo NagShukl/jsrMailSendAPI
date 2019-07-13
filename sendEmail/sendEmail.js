@@ -15,7 +15,7 @@ class SendEmail {
         req.on('data', (reqData) => {
             utils.log(`handleSendMailRequest: verifying request body.`);
             const testData = require('../test/testData');
-            const mailData = this.getRequestBody(JSON.stringify(testData));//reqData);
+            const mailData = this.getRequestBody(reqData);//JSON.stringify(testData));
             if (!mailData.isValid) {
                 utils.log(`handleSendMailRequest: request body verification failed!`);
                 const err = {
@@ -30,7 +30,7 @@ class SendEmail {
         });
     }
     performMailSendAction(res, mailData, providerNumber) {
-        utils.log(`\n\n`);
+        utils.log(`\n**********************************************************\n`);
         if (!providerNumber) {
             providerNumber = 0;
         }
@@ -62,7 +62,7 @@ class SendEmail {
     getRequestBody(data) {
         let err = [];
         const res = {};
-        
+
         try {
             const mailData = JSON.parse(data);
             let isValid = this.validateForNonBlankProperty(mailData, 'subject');
@@ -91,16 +91,16 @@ class SendEmail {
     validateFields(mailData, err) {
         const allEmailIds = [];
         const fromError = this.validateFromField(mailData);
-        err = fromError.length > 0?[...err, fromError]:err;
+        err = fromError.length > 0 ? [...err, fromError] : err;
         const toError = this.validateToField(mailData, allEmailIds);
-        err = toError.length > 0?[...err, toError]:err;
+        err = toError.length > 0 ? [...err, toError] : err;
         const ccError = this.validateCCBCCField(mailData, 'cc', allEmailIds);
-        err = ccError.length > 0?[...err, ccError]:err;
+        err = ccError.length > 0 ? [...err, ccError] : err;
         const bccError = this.validateCCBCCField(mailData, 'bcc', allEmailIds);
-        err = bccError.length > 0?[...err, bccError]:err;
+        err = bccError.length > 0 ? [...err, bccError] : err;
         // finally validate for unique emailIds.
         const duplicateError = this.validateUniqueEmails(allEmailIds);
-        err = duplicateError.length > 0?[...err, duplicateError]:err;
+        err = duplicateError.length > 0 ? [...err, duplicateError] : err;
         return err;
     }
     validateUniqueEmails(allEmailIds) {
@@ -108,10 +108,8 @@ class SendEmail {
         var duplicates = allEmailIds.reduce(function (acc, el, i, arr) {
             if (arr.indexOf(el) !== i && acc.indexOf(el) < 0) acc.push(el); return acc;
         }, []);
-        console.log('===>>>> '+duplicates.length+' : '+allEmailIds.length);
         if (duplicates.length != 0) {
-            console.log('===>>>>AAA '+duplicates.length+' : '+allEmailIds.length);
-                err.push(duplicates+' Ids are duplicate in to, cc or bcc list.');
+            err.push(duplicates + ' Ids are duplicate in to, cc or bcc list.');
         }
         return err;
     }

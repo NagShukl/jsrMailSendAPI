@@ -8,7 +8,6 @@ class SendGridProvider {
     }
     sendMail(mailData) {
         utils.log('sendMail: SendGrid service is trying to send mail.');
-        console.log('mailData = ',mailData);
         const http = require("https");
 
         const returnPromise = new Promise((resolve, reject) => {
@@ -28,25 +27,12 @@ class SendGridProvider {
                 });
             });
             req.write(this.getRequestBoday(mailData));
-            //     JSON.stringify({
-            //     personalizations:
-            //         [{
-            //             to: [{ email: 'nagendra.shukla@gmail.com', name: 'Nagendra Shukla' }],
-            //             dynamic_template_data: { verb: '', adjective: '', noun: '', currentDayofWeek: '' },
-            //             subject: 'Hello, World! Jai Shri Ram!'
-            //         }],
-            //     from: { email: 'nagendra.shukla@gmail.com', name: 'Nagendra Shukla' },
-            //     reply_to: { email: 'nagendra.shukla@gmail.com', name: 'Nagendra Shukla' },
-            //     template_id: 'd-8096b5dacb254c8b882816f22d1d11fe'
-            // })
-            // );
             req.end();
         });
         return returnPromise;
     }
     getRequestBoday(mailData) {
         const res = {};
-        // {"personalizations": [{"to": [{"email": "example@example.com"}]}],"from": {"email": "example@example.com"},"subject": "Hello, World!","content": [{"type": "text/plain", "value": "Heya!"}]}
         res.personalizations = [
             {
                 to: mailData.to,
@@ -64,7 +50,6 @@ class SendGridProvider {
         ];
         res.reply_to = { email: 'nagendra.shukla@gmail.com', name: 'Nagendra Shukla' };
         res.template_id ='d-8096b5dacb254c8b882816f22d1d11fe';
-        console.log('====> ',JSON.stringify(res));
         return JSON.stringify(res);
     }
     getOptions() {

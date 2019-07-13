@@ -1,7 +1,6 @@
 const http = require('http');
 const utils = require('./utils/utils');
 const emailSender = require('./sendEmail/sendEmail');
-// import {emailSender as emailSender} from './sendEmail/sendEmail';
 
 const API_ROUTE = '/sendmail';
 const PORT = 3000;
@@ -9,7 +8,7 @@ const server = http.createServer();
 
 server.on('request', (req, res) => performRequest(req, res));
 server.listen(PORT);
-utils.log('**JSR Server listening on port '+PORT);
+utils.log('Server listening on port '+PORT);
 
 
 
@@ -32,16 +31,3 @@ const sendError = (res, errMsg, errCode) => {
     res.end();
 }
 
-/**
- * 
-Hi Nagendra Shukla,
-
-A new API key was created on your account:
-
-Key ID: afab6073-5b41e7ee 
-Description: API Key 
-If you or one of your users did not create this API key, please contact
-
-====
-sandbox4f97468e1cd94d71a6e4b0ed0f83daac.mailgun.org
- */

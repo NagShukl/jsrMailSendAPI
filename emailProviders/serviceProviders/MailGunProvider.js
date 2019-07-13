@@ -9,7 +9,6 @@ class MailGunProvider {
     }
     sendMail(mailData) {
         utils.log('sendMail: MailGun service is trying to send mail.');
-        console.log('mailData = ',mailData);
         const qs = require("querystring");
         const http = require("https");
         
