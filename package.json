@@ -4,7 +4,8 @@
   "description": "This is a microservice to allow users to send emails.",
   "main": "server.js",
   "scripts": {
-    "test": "test"
+    "start": "SET NODE_ENV=dev&& node server.js",
+    "test": "mocha --timeout 10000"
   },
   "repository": {
     "type": "git",
@@ -18,5 +19,10 @@
   ],
   "author": "Nagendra Shukla",
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^2.0.1",
+    "mocha": "^2.4.5"
+  }
 }

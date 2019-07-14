@@ -94,10 +94,15 @@ class SendEmail {
         err = fromError.length > 0 ? [...err, fromError] : err;
         const toError = this.validateToField(mailData, allEmailIds);
         err = toError.length > 0 ? [...err, toError] : err;
-        const ccError = this.validateCCBCCField(mailData, 'cc', allEmailIds);
-        err = ccError.length > 0 ? [...err, ccError] : err;
-        const bccError = this.validateCCBCCField(mailData, 'bcc', allEmailIds);
-        err = bccError.length > 0 ? [...err, bccError] : err;
+        if (mailData.cc) {
+            const ccError = this.validateCCBCCField(mailData, 'cc', allEmailIds);
+            err = ccError.length > 0 ? [...err, ccError] : err;
+        }
+        if (mailData.bcc) {
+            const bccError = this.validateCCBCCField(mailData, 'bcc', allEmailIds);
+            err = bccError.length > 0 ? [...err, bccError] : err;
+        }
+
         // finally validate for unique emailIds.
         const duplicateError = this.validateUniqueEmails(allEmailIds);
         err = duplicateError.length > 0 ? [...err, duplicateError] : err;
@@ -185,7 +190,7 @@ class SendEmail {
         return { httpError: constants.HTTP_BAD_REQUEST, appError: constants.APPLICATION_BAD_REQUEST };
     }
     sendError(res, err) {
-        res.writeHead(err.httpError.statusCode, err.appError.statusMessage);
+        res.writeHead(err.httpError.statusCode, { "Content-Type": "application/json" });
         res.write(JSON.stringify(err.appError));
         res.end();
     }

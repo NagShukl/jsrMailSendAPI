@@ -3,7 +3,7 @@ module.exports = {
      CONTENT_LENGTH: 'content-length',
      SUPPORTED_CONTENT_TYPE: 'application/json',
      HTTP_BAD_REQUEST: {
-        statusCode: '404',
+        statusCode: '400',
         statusMessage: 'Bad Request!'
     },
      APPLICATION_BAD_REQUEST: {

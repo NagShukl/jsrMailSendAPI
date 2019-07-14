@@ -10,13 +10,11 @@ server.on('request', (req, res) => performRequest(req, res));
 server.listen(PORT);
 utils.log('Server listening on port '+PORT);
 
-
-
 const performRequest = (req, res) => {
     if(req.method === 'POST') {
        return handlePostRequest(req, res);
     }
-    sendError(res, 'Unsupported HTTP method!', 404);
+    sendError(res, 'Method Not Allowed', 405);
 }
 const handlePostRequest = (req, res) => {
     if(req.url === API_ROUTE) {
@@ -26,8 +24,9 @@ const handlePostRequest = (req, res) => {
 }
 const sendError = (res, errMsg, errCode) => {
     utils.log('SendError : '+errMsg);
-    res.writeHead(505, {'Content-Type': 'text/html'});
+    res.writeHead(errCode, {'Content-Type': 'text/html'});
     res.write(errMsg);
     res.end();
 }
+module.exports = server;
 
