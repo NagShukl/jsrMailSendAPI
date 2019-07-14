@@ -5,7 +5,7 @@ This project is build on Node v 10.15.3
  ### `npm start`
  command to launch email sender api on port 3000. This commands runs on development mode, so all the console logs should be visible on console.
 
-### `npm start` 
+### `npm install` 
 command to grab the dev-dependance required for unit testing.
  
 ### `npm test`
